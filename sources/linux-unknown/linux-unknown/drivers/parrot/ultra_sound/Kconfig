@@ -1,0 +1,8 @@
+config ULTRA_SOUND
+	tristate "Parrot ultra sound"
+	depends on (! SPI_PARROT6)
+    select AAI_IRQ_SHARED
+	default n
+	help
+		Select Parrot6i AAI ADC and SPI to perform ultra sound radar.
+

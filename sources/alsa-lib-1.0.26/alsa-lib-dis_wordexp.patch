@@ -1,0 +1,14 @@
+--- a/src/userfile.c	2008-11-10 15:02:08.000000000 +0100
++++ b/src/userfile.c	2008-11-10 15:02:58.000000000 +0100
+@@ -32,7 +32,10 @@
+  * stores the first matchine one.  The returned string is strdup'ed.
+  */
+ 
+-#ifdef HAVE_WORDEXP_H
++//#ifdef HAVE_WORDEXP_H
++/* eglibc got wordexp.h but no support for it ... 
++ configure should check if it is usable...*/
++#if 0
+ #include <wordexp.h>
+ #include <assert.h>
+ int snd_user_file(const char *file, char **result)

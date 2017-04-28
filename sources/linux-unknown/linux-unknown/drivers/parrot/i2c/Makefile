@@ -1,0 +1,1 @@
+obj-$(CONFIG_I2CM_PARROT) += parrot5_i2cm.o

@@ -1,0 +1,31 @@
+--- a/src/dlmisc.c    2012-09-06 10:55:14.000000000 +0200
++++ b/src/dlmisc.c    2013-09-19 18:28:42.000000000 +0200
+@@ -48,6 +48,7 @@
+  * This function can emulate dynamic linking for the static build of
+  * the alsa-lib library. In that case, \p name is set to \c NULL.
+  */
++static void *snd_dl_handle;
+ void *snd_dlopen(const char *name, int mode)
+ {
+ #ifndef PIC
+@@ -67,6 +68,11 @@
+ #endif
+ #endif
+ #ifdef HAVE_LIBDL
++	if (!strcmp("/usr/lib/libasound.so.2", name)) {
++		if (!snd_dl_handle)
++			snd_dl_handle = dlopen(name, mode);
++		return snd_dl_handle;
++	}
+	return dlopen(name, mode);
+ #else
+	return NULL;
+@@ -88,6 +94,8 @@
+		return 0;
+ #endif
+ #ifdef HAVE_LIBDL
++	if (handle == snd_dl_handle)
++		return 0;
+	return dlclose(handle);
+ #else
+	return 0;

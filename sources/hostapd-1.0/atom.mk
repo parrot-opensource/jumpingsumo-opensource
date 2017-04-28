@@ -1,0 +1,34 @@
+
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+
+LOCAL_MODULE := hostapd
+LOCAL_DESCRIPTION := Wi-Fi access point daemon
+LOCAL_CATEGORY_PATH := network/wireless
+LOCAL_LIBRARIES := libnl libcrypto
+
+LOCAL_AUTOTOOLS_VERSION := 1.0
+LOCAL_AUTOTOOLS_ARCHIVE := $(LOCAL_MODULE)-$(LOCAL_AUTOTOOLS_VERSION).tar.gz
+LOCAL_AUTOTOOLS_SUBDIR := $(LOCAL_MODULE)-$(LOCAL_AUTOTOOLS_VERSION)
+
+define LOCAL_AUTOTOOLS_CMD_CONFIGURE
+	$(Q) cp -pf $(PRIVATE_PATH)/config-1.0 $(PRIVATE_SRC_DIR)/hostapd/.config
+endef
+
+define LOCAL_AUTOTOOLS_CMD_BUILD
+	$(Q) $(AUTOTOOLS_CONFIGURE_ENV) $(MAKE) -C $(PRIVATE_SRC_DIR)/hostapd \
+		DESTDIR="$(TARGET_OUT_STAGING)"
+endef
+
+define LOCAL_AUTOTOOLS_CMD_INSTALL
+	$(Q) mkdir -p $(TARGET_OUT_STAGING)/sbin
+	$(Q) cp -pf $(PRIVATE_SRC_DIR)/hostapd/hostapd $(TARGET_OUT_STAGING)/sbin
+endef
+
+define LOCAL_AUTOTOOLS_CMD_POST_CLEAN
+	$(Q) rm -f $(TARGET_OUT_STAGING)/sbin/hostapd
+endef
+
+include $(BUILD_AUTOTOOLS)
+
